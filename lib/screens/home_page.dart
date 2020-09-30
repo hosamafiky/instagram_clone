@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:instagram_clone/widgets/appBar.dart';
-import '../models/post.dart';
-import '../models/story.dart';
+import 'package:instagram_clone/data/data.dart';
+import 'package:instagram_clone/screens/profile_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -14,7 +13,35 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBars(),
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Color(0xFFF7F7F7),
+        title: Text(
+          'Instagram',
+          style: TextStyle(
+            fontFamily: "Billabong",
+            fontSize: 34.0,
+            color: Color(0xFF201D1D),
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(Feather.camera, color: Color(0xFF201D1D)),
+          iconSize: 30.0,
+          onPressed: () {},
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Feather.tv, color: Color(0xFF201D1D)),
+            iconSize: 30.0,
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(Feather.send, color: Color(0xFF201D1D)),
+            iconSize: 30.0,
+            onPressed: () {},
+          ),
+        ],
+      ),
       body: Container(
         height: MediaQuery.of(context).size.height,
         child: SingleChildScrollView(
@@ -50,9 +77,9 @@ class _HomePageState extends State<HomePage> {
                 child: ListView.builder(
                   physics: BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
-                  itemCount: stories.length,
+                  itemCount: profiles.length,
                   itemBuilder: (context, index) {
-                    return stories[index].isViewed
+                    return profiles[index].story.isViewed
                         ? Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -63,11 +90,11 @@ class _HomePageState extends State<HomePage> {
                                 child: CircleAvatar(
                                   radius: 40.0,
                                   backgroundImage:
-                                      AssetImage(stories[index].avatarUrl),
+                                      AssetImage(profiles[index].avatarUrl),
                                 ),
                               ),
                               Text(
-                                stories[index].name.toLowerCase(),
+                                profiles[index].userName,
                                 style: TextStyle(fontWeight: FontWeight.w600),
                               ),
                             ],
@@ -98,12 +125,12 @@ class _HomePageState extends State<HomePage> {
                                 child: CircleAvatar(
                                   radius: 40.0,
                                   backgroundImage:
-                                      AssetImage(stories[index].avatarUrl),
+                                      AssetImage(profiles[index].avatarUrl),
                                 ),
                               ),
                               SizedBox(height: 10.0),
                               Text(
-                                stories[index].name.toLowerCase(),
+                                profiles[index].userName,
                                 style: TextStyle(fontWeight: FontWeight.w600),
                               ),
                             ],
@@ -117,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                 child: ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: posts.length,
+                  itemCount: profiles.length,
                   itemBuilder: (context, i) {
                     return Column(
                       children: [
@@ -127,25 +154,35 @@ class _HomePageState extends State<HomePage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 25.5,
-                                    backgroundColor: Colors.black,
-                                    child: CircleAvatar(
-                                      radius: 25.0,
-                                      backgroundImage:
-                                          AssetImage(posts[i].userImage),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ProfilePage(i),
                                     ),
-                                  ),
-                                  SizedBox(width: 10.0),
-                                  Text(
-                                    posts[i].userName.toLowerCase(),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16.0),
-                                  ),
-                                ],
+                                  );
+                                },
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 25.5,
+                                      backgroundColor: Colors.black,
+                                      child: CircleAvatar(
+                                        radius: 25.0,
+                                        backgroundImage:
+                                            AssetImage(profiles[i].avatarUrl),
+                                      ),
+                                    ),
+                                    SizedBox(width: 10.0),
+                                    Text(
+                                      profiles[i].userName,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0),
+                                    ),
+                                  ],
+                                ),
                               ),
                               IconButton(
                                 icon: Icon(SimpleLineIcons.options),
@@ -155,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         FadeInImage(
-                          image: AssetImage(posts[i].postImage),
+                          image: AssetImage(profiles[i].postImage),
                           placeholder:
                               AssetImage("assets/images/placeholder.png"),
                         ),
@@ -247,7 +284,7 @@ class _HomePageState extends State<HomePage> {
                             overflow: TextOverflow.visible,
                             text: TextSpan(children: [
                               TextSpan(
-                                text: posts[i].userName.toLowerCase(),
+                                text: profiles[i].userName,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
@@ -255,7 +292,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               TextSpan(
-                                text: " ${posts[i].caption}",
+                                text: " ${profiles[i].postCaption}",
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 14.0,

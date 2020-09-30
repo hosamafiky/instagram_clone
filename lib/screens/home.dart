@@ -21,7 +21,7 @@ class _HomeState extends State<Home> {
     SearchPage(),
     CameraPage(),
     NotificationsPage(),
-    ProfilePage(),
+    ProfilePage(0),
   ];
 
   @override
